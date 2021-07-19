@@ -46,15 +46,20 @@ def steps(m) :
     global extraAction
     global human_plan
     global changes_set
+
+    print('inside steps function ....')
+
     
     human_plan = []
     changes_set = []
     
     if (debug) : print ("Answer: {}".format(m))     
     curr_as = m.symbols(shown=True)
+    print(curr_as)
     
     for x in range(0, len(curr_as)) :  
-        if (curr_as[x].match("occurs", 2)) : 
+        if (curr_as[x].match("occurs", 2)) :
+            print('maching with occurs') 
             (y) =  curr_as[x].arguments[0] 
             if (debug) :  print (x, ':', curr_as[x], ' --- ', curr_as[x].arguments, ' === ', y, ' +++ ', y.arguments) 
             elem = clingo.Function("considered",[y.arguments[0]]) 
@@ -63,9 +68,11 @@ def steps(m) :
             human_plan.append(curr_as[x])
         
         if (curr_as[x].match("changes", 1)) : 
+            print('maching with changes')
             changes_set.append(curr_as[x])
             
         if (curr_as[x].match("considered",1)) :
+            print('maching with considered')
             if (debug) :  print (x, ':', curr_as[x], ' <<< ', curr_as[x].arguments)
             if (not (curr_as[x] in extraAction)) : extraAction.append(curr_as[x])
  
@@ -169,7 +176,7 @@ def main(prg):
                 print ("Put action in considered")
                 for a in human_plan:
                     change_act = clingo.Function("considered", [a.arguments[0]])
-                    print (change_act)
+                    print(change_act)
                     prg.assign_external(change_act, True)
                     changes_set.append(a.arguments[0])
                 
